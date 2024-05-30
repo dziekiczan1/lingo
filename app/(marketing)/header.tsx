@@ -32,8 +32,12 @@ export const Header = () => {
           <SignedOut>
             <SignInButton
               mode="modal"
-              forceRedirectUrl="/learn"
-              signUpForceRedirectUrl="/learn"
+              forceRedirectUrl={
+                process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL
+              }
+              signUpForceRedirectUrl={
+                process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL
+              }
             >
               <Button size="lg" variant="ghost">
                 Login
