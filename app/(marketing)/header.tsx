@@ -1,5 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Header = () => {
   return (
@@ -12,6 +22,25 @@ export const Header = () => {
             Lingo
           </h1>
         </Link>
+        <ClerkLoading>
+          <Loader className="w-5 h-5 text-muted-foreground animate-spin" />
+        </ClerkLoading>
+        <ClerkLoaded>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton
+              mode="modal"
+              forceRedirectUrl="/learn"
+              signUpForceRedirectUrl="/learn"
+            >
+              <Button size="lg" variant="ghost">
+                Login
+              </Button>
+            </SignInButton>
+          </SignedOut>
+        </ClerkLoaded>
       </div>
     </header>
   );
