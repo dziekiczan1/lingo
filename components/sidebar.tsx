@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+import { SidebarItem } from "./sidebar-item";
 
 type SidebarProps = {
   className?: string;
@@ -27,7 +28,16 @@ export const Sidebar = ({ className }: SidebarProps) => {
         </div>
       </Link>
 
-      <div className="flex flex-1 flex-col gap-y-2">SidebarItem</div>
+      <div className="flex flex-1 flex-col gap-y-2">
+        <SidebarItem label="Learn" href="/learn" iconSrc="/learn.svg" />
+        <SidebarItem
+          label="Leaderboard"
+          href="/leaderboard"
+          iconSrc="/leaderboard.svg"
+        />
+        <SidebarItem label="Quests" href="/quests" iconSrc="/quests.svg" />
+        <SidebarItem label="Shop" href="/shop" iconSrc="/shop.svg" />
+      </div>
 
       <div className="p-4">
         <ClerkLoading>
