@@ -1,4 +1,5 @@
 import { MAX_HEARTS } from "@/constants";
+import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const courses = pgTable("courses", {
@@ -6,6 +7,10 @@ export const courses = pgTable("courses", {
   title: text("title").notNull(),
   imageSrc: text("image_src").notNull(),
 });
+
+export const coursesRelations = relations(courses, ({ many }) => ({
+  userProgress: many(userProgress),
+}));
 
 export const userProgress = pgTable("user_progress", {
   userId: text("user_id").primaryKey(),
@@ -17,3 +22,10 @@ export const userProgress = pgTable("user_progress", {
   hearts: integer("hearts").notNull().default(MAX_HEARTS),
   points: integer("points").notNull().default(0),
 });
+
+export const userProgressRelations = relations(userProgress, ({ one }) => ({
+  activeCourse: one(courses, {
+    fields: [userProgress.activeCourseId],
+    references: [courses.id],
+  }),
+}));
