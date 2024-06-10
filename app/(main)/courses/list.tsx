@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { courses, userProgress } from "@/db/schema";
 
 import { Card } from "./card";
+import { upsertUserProgress } from "@/actions/user-progress";
 
 type ListProps = {
   courses: (typeof courses.$inferSelect)[];
@@ -24,7 +25,7 @@ export const List = ({ courses, activeCourseId }: ListProps) => {
     if (id === activeCourseId) return router.push("/learn");
 
     startTransition(() => {
-      toast.success("Course selected!");
+      upsertUserProgress(id).catch(() => toast.error("Something went wrong."));
     });
   };
 
