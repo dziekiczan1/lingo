@@ -15,7 +15,7 @@ type LessonButtonProps = {
   totalCount: number;
   locked?: boolean;
   current?: boolean;
-  percentage?: number;
+  percentage: number;
 };
 
 export const LessonButton = ({

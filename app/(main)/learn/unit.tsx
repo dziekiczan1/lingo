@@ -11,12 +11,8 @@ type UnitProps = {
   lessons: (typeof lessons.$inferSelect & {
     completed: boolean;
   })[];
-  activeLesson?:
-    | (typeof lessons.$inferSelect & {
-        unit: typeof units.$inferSelect;
-      })
-    | undefined;
-  activeLessonPercentage?: number;
+  activeLesson: any;
+  activeLessonPercentage: number;
 };
 
 export const Unit = ({
@@ -43,6 +39,7 @@ export const Unit = ({
               totalCount={lessons.length - 1}
               current={isCurrent}
               locked={isLocked}
+              percentage={activeLessonPercentage}
             />
           );
         })}
