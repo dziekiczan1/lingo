@@ -3,6 +3,7 @@
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState } from "react";
 import { Header } from "./header";
+import { QuestionBubble } from "./question-bubble";
 
 type QuizProps = {
   initialPercentage: number;
@@ -34,8 +35,20 @@ export const Quiz = ({
 
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
+  const [selectedOption, setSelectedOption] = useState<number>();
 
   const challenge = challenges[activeIndex];
+  const options = challenge?.challengeOptions ?? [];
+
+  const onNext = () => {
+    setActiveIndex((current) => current + 1);
+  };
+
+  const onSelect = (id: number) => {
+    if (status !== "none") return;
+
+    setSelectedOption(id);
+  };
 
   const title =
     challenge.type === "ASSIST"
@@ -56,6 +69,12 @@ export const Quiz = ({
             <h1 className="text-center text-lg font-bold text-neutral-700 lg:text-start lg:text-3xl">
               {title}
             </h1>
+
+            <div>
+              {challenge.type === "ASSIST" && (
+                <QuestionBubble question={challenge.question} />
+              )}
+            </div>
           </div>
         </div>
       </div>
