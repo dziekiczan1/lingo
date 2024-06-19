@@ -1,10 +1,11 @@
 "use client";
 
 import { challengeOptions, challenges } from "@/db/schema";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
+import { Footer } from "./footer";
 
 type QuizProps = {
   initialPercentage: number;
@@ -24,6 +25,8 @@ export const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: QuizProps) => {
+  const [pending, startTransition] = useTransition();
+
   const [hearts, setHearts] = useState(initialHearts);
   const [percentage, setPercentage] = useState(() => {
     return initialPercentage === 100 ? 0 : initialPercentage;
@@ -37,6 +40,7 @@ export const Quiz = ({
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
   const [selectedOption, setSelectedOption] = useState<number>();
+  const [status, setStatus] = useState<"none" | "wrong" | "correct">("none");
 
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
@@ -79,7 +83,7 @@ export const Quiz = ({
               <Challenge
                 options={options}
                 onSelect={onSelect}
-                status="none"
+                status={status}
                 selectedOption={selectedOption}
                 disabled={false}
                 type={challenge.type}
@@ -88,6 +92,11 @@ export const Quiz = ({
           </div>
         </div>
       </div>
+      <Footer
+        disabled={pending || !selectedOption}
+        status={status}
+        onCheck={() => {}}
+      />
     </>
   );
 };
