@@ -10,6 +10,9 @@ import { MAX_HEARTS } from "@/constants";
 import { toast } from "sonner";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
+import { useHeartsModal } from "@/store/use-hearts-modal";
+import { usePracticeModal } from "@/store/use-practice-modal";
+import { useAudio } from "react-use";
 
 type QuizProps = {
   initialPercentage: number;
@@ -29,7 +32,17 @@ export const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: QuizProps) => {
+  const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
+  const [incorrectAudio, _i, incorrectControls] = useAudio({
+    src: "/incorrect.wav",
+  });
+  const [finishAudio] = useAudio({
+    src: "/finish.mp3",
+    autoPlay: true,
+  });
+
   const [pending, startTransition] = useTransition();
+  const { open: openHeartsModal } = useHeartsModal();
 
   const [hearts, setHearts] = useState(initialHearts);
   const [percentage, setPercentage] = useState(() => {
@@ -148,7 +161,7 @@ export const Quiz = ({
                 onSelect={onSelect}
                 status={status}
                 selectedOption={selectedOption}
-                disabled={false}
+                disabled={pending}
                 type={challenge.type}
               />
             </div>
