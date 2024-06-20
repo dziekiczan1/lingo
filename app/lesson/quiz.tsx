@@ -9,6 +9,7 @@ import { Footer } from "./footer";
 import { MAX_HEARTS } from "@/constants";
 import { toast } from "sonner";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
+import { reduceHearts } from "@/actions/user-progress";
 
 type QuizProps = {
   initialPercentage: number;
