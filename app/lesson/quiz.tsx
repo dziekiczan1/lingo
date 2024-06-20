@@ -6,6 +6,9 @@ import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
 import { Footer } from "./footer";
+import { MAX_HEARTS } from "@/constants";
+import { toast } from "sonner";
+import { upsertChallengeProgress } from "@/actions/challenge-progress";
 
 type QuizProps = {
   initialPercentage: number;
@@ -55,6 +58,65 @@ export const Quiz = ({
     setSelectedOption(id);
   };
 
+  const onContinue = () => {
+    if (!selectedOption) return;
+
+    if (status === "wrong") {
+      setStatus("none");
+      setSelectedOption(undefined);
+      return;
+    }
+
+    if (status === "correct") {
+      onNext();
+      setStatus("none");
+      setSelectedOption(undefined);
+      return;
+    }
+
+    const correctOption = options.find((option) => option.correct);
+
+    if (!correctOption) return;
+
+    if (correctOption.id === selectedOption) {
+      startTransition(() => {
+        upsertChallengeProgress(challenge.id)
+          .then((response) => {
+            if (response?.error === "hearts") {
+              openHeartsModal();
+              return;
+            }
+
+            void correctControls.play();
+            setStatus("correct");
+            setPercentage((prev) => prev + 100 / challenges.length);
+
+            // This is a practice
+            if (initialPercentage === 100) {
+              setHearts((prev) => Math.min(prev + 1, MAX_HEARTS));
+            }
+          })
+          .catch(() => toast.error("Something went wrong. Please try again."));
+      });
+    } else {
+      startTransition(() => {
+        reduceHearts(challenge.id)
+          .then((response) => {
+            if (response?.error === "hearts") {
+              openHeartsModal();
+              return;
+            }
+
+            void incorrectControls.play();
+            setStatus("wrong");
+
+            if (!response?.error) setHearts((prev) => Math.max(prev - 1, 0));
+          })
+          .catch(() => toast.error("Something went wrong. Please try again."));
+      });
+    }
+  };
+
   const title =
     challenge.type === "ASSIST"
       ? "Select the correct meaning"
@@ -95,7 +157,7 @@ export const Quiz = ({
       <Footer
         disabled={pending || !selectedOption}
         status={status}
-        onCheck={() => {}}
+        onCheck={onContinue}
       />
     </>
   );
