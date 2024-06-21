@@ -12,10 +12,11 @@ import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
-import { useAudio, useWindowSize } from "react-use";
+import { useAudio, useMount, useWindowSize } from "react-use";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import Image from "next/image";
+import { ResultCard } from "./result-card";
 
 type QuizProps = {
   initialPercentage: number;
@@ -49,6 +50,10 @@ export const Quiz = ({
   const [pending, startTransition] = useTransition();
   const { open: openHeartsModal } = useHeartsModal();
   const { open: openPracticeModal } = usePracticeModal();
+
+  useMount(() => {
+    if (initialPercentage === 100) openPracticeModal();
+  });
 
   const [lessonId] = useState(initialLessonId);
   const [hearts, setHearts] = useState(initialHearts);
