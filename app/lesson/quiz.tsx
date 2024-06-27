@@ -1,21 +1,24 @@
 "use client";
 
-import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useTransition } from "react";
-import { Header } from "./header";
-import { QuestionBubble } from "./question-bubble";
-import { Challenge } from "./challenge";
-import { Footer } from "./footer";
-import { MAX_HEARTS } from "@/constants";
-import { toast } from "sonner";
-import { upsertChallengeProgress } from "@/actions/challenge-progress";
-import { reduceHearts } from "@/actions/user-progress";
-import { useHeartsModal } from "@/store/use-hearts-modal";
-import { usePracticeModal } from "@/store/use-practice-modal";
-import { useAudio, useMount, useWindowSize } from "react-use";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
-import Image from "next/image";
+import { useAudio, useWindowSize, useMount } from "react-use";
+import { toast } from "sonner";
+
+import { upsertChallengeProgress } from "@/actions/challenge-progress";
+import { reduceHearts } from "@/actions/user-progress";
+import { MAX_HEARTS } from "@/constants";
+import { challengeOptions, challenges, userSubscription } from "@/db/schema";
+import { useHeartsModal } from "@/store/use-hearts-modal";
+import { usePracticeModal } from "@/store/use-practice-modal";
+
+import { Challenge } from "./challenge";
+import { Footer } from "./footer";
+import { Header } from "./header";
+import { QuestionBubble } from "./question-bubble";
 import { ResultCard } from "./result-card";
 
 type QuizProps = {
@@ -26,7 +29,11 @@ type QuizProps = {
     completed: boolean;
     challengeOptions: (typeof challengeOptions.$inferSelect)[];
   })[];
-  userSubscription: any;
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & {
+        isActive: boolean;
+      })
+    | null;
 };
 
 export const Quiz = ({
@@ -68,6 +75,7 @@ export const Quiz = ({
 
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
+
   const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"none" | "wrong" | "correct">("none");
 
@@ -232,6 +240,7 @@ export const Quiz = ({
           </div>
         </div>
       </div>
+
       <Footer
         disabled={pending || !selectedOption}
         status={status}
