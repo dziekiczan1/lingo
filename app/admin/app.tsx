@@ -1,8 +1,8 @@
 "use client";
 
-import simpleRestProvider from "ra-data-simple-rest";
 import { Admin, Resource } from "react-admin";
 
+import simpleRestProvider from "ra-data-simple-rest";
 import { ChallengeCreate } from "./challenge/create";
 import { ChallengeEdit } from "./challenge/edit";
 import { ChallengeList } from "./challenge/list";
@@ -19,7 +19,7 @@ import { UnitCreate } from "./unit/create";
 import { UnitEdit } from "./unit/edit";
 import { UnitList } from "./unit/list";
 
-const dataProvider = simpleRestProvider("/api");
+const dataProvider: any = simpleRestProvider("/api");
 
 const App = () => {
   return (
